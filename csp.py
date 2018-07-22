@@ -8,10 +8,7 @@ from random import randint
 import random
 import math
 
-"""
-	Base class for unary constraints
-	Implement isSatisfied in subclass to use
-"""
+
 
 
 def xrange(x):
@@ -29,10 +26,6 @@ class UnaryConstraint:
         return var == self.var
 
 
-"""	
-	Implementation of UnaryConstraint
-	Satisfied if value does not match passed in paramater
-"""
 
 
 class BadValueConstraint(UnaryConstraint):
@@ -47,11 +40,6 @@ class BadValueConstraint(UnaryConstraint):
         return 'BadValueConstraint (%s) {badValue: %s}' % (str(self.var), str(self.badValue))
 
 
-"""	
-	Implementation of UnaryConstraint
-	Satisfied if value matches passed in paramater
-"""
-
 
 class GoodValueConstraint(UnaryConstraint):
     def __init__(self, var, goodValue):
@@ -64,11 +52,6 @@ class GoodValueConstraint(UnaryConstraint):
     def __repr__(self):
         return 'GoodValueConstraint (%s) {goodValue: %s}' % (str(self.var), str(self.goodValue))
 
-
-"""
-	Base class for binary constraints
-	Implement isSatisfied in subclass to use
-"""
 
 
 class BinaryConstraint:
@@ -90,10 +73,6 @@ class BinaryConstraint:
         return self.var1
 
 
-"""
-	Implementation of BinaryConstraint
-	Satisfied if both values assigned are different
-"""
 
 
 class NotEqualConstraint(BinaryConstraint):
@@ -104,14 +83,6 @@ class NotEqualConstraint(BinaryConstraint):
 
     def __repr__(self):
         return 'NotEqualConstraint (%s, %s)' % (str(self.var1), str(self.var2))
-
-
-"""
-	Implementation of BinaryConstraint
-	Used when solving nQueens
-	Satisfied if both values are different and the absolute value of the difference
-	of the values are different
-"""
 
 
 class nQueensConstraint(BinaryConstraint):
@@ -231,7 +202,6 @@ class Assignment:
 
 
 def consistent(assignment, csp, var, value):
-    """Question 1"""
 
     for constraint in csp.binaryConstraints:
         if (constraint.affects(var)):
@@ -261,7 +231,6 @@ def consistent(assignment, csp, var, value):
 
 
 def recursiveBacktracking(assignment, csp, orderValuesMethod, selectVariableMethod):
-    """Question 1"""
     if assignment.isComplete():
         return assignment
 
@@ -329,7 +298,6 @@ def chooseFirstVariable(assignment, csp):
 
 
 def minimumRemainingValuesHeuristic(assignment, csp):
-    """Question 2"""
     nextVar = None
     for key in assignment.assignedValues:
         if not assignment.isAssigned(key):
@@ -353,11 +321,6 @@ def minimumRemainingValuesHeuristic(assignment, csp):
     return nextVar
 
 
-"""
-	Trivial method for ordering values to assign.
-	Uses no heuristics.
-"""
-
 
 def orderValues(assignment, csp, var):
     return list(assignment.varDomains[var])
@@ -378,8 +341,7 @@ def orderValues(assignment, csp, var):
 
 
 def leastConstrainingValuesHeuristic(assignment, csp, var):
-    """Hint: Creating a helper function to count the number of constrained values might be useful"""
-    """Question 3"""
+
     values = list(assignment.varDomains[var])
     tuples = []
     answer = []
@@ -426,9 +388,6 @@ def usefulConstraintCount(assignment, csp, var, value):
     return count
 
 
-"""
-	Trivial method for making no inferences.
-"""
 
 
 def noInferences(assignment, csp, var, value):
@@ -453,7 +412,6 @@ def noInferences(assignment, csp, var, value):
 
 
 def forwardChecking(assignment, csp, var, value):
-    """Question 4"""
     inferences = set([])
     domain = assignment.varDomains
     for constraint in csp.binaryConstraints:
@@ -493,7 +451,6 @@ def forwardChecking(assignment, csp, var, value):
 
 
 def recursiveBacktrackingWithInferences(assignment, csp, orderValuesMethod, selectVariableMethod, inferenceMethod):
-    """Question 4"""
     if assignment.isComplete():
         return assignment
 
@@ -536,7 +493,6 @@ def recursiveBacktrackingWithInferences(assignment, csp, orderValuesMethod, sele
 
 
 def revise(assignment, csp, var1, var2, constraint):
-    """Question 5"""
     inferences = set([])
     for secondVal in assignment.varDomains[var2]:
         constraintSatisfied = False
@@ -573,9 +529,8 @@ def revise(assignment, csp, var1, var2, constraint):
 """
 
 
+
 def maintainArcConsistency(assignment, csp, var, value):
-    """Hint: implement revise first and use it as a helper function"""
-    """Question 5"""
     inferences = set([])
     queue = deque()
     for constraint in csp.binaryConstraints:
@@ -613,7 +568,6 @@ def maintainArcConsistency(assignment, csp, var, value):
 
 
 def AC3(assignment, csp):
-    """Hint: implement revise first and use it as a helper function"""
     inferences = set([])
     queue = deque()
     keys = assignment.varDomains.keys()
