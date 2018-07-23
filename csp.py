@@ -883,7 +883,8 @@ def print_graph_gui(M, dic, color_list, num_of_colors):
         elif var[1] is 'gold':
             all_color_list[8].append(int(var[0]))
         else:
-            all_color_list[8].append(int(var[0]))
+
+            all_color_list[9].append(int(var[0]))
             # img_color_list.append('g')
     # print(dic.values())
     # print(dict.keys())
@@ -935,7 +936,7 @@ def print_graph_gui(M, dic, color_list, num_of_colors):
 
 
 def colors_for_map(num):
-    colors_to_return = ["RED", "GREEN", "BLUE","yellow",'gray',"pink","purple","tan","gold","darkblue"]
+    colors_to_return = ["RED", "GREEN", "BLUE","yellow","gray","pink","purple","tan","gold","darkblue"]
     return colors_to_return[:num]
 
 
@@ -993,12 +994,12 @@ def script_test1(use_ac3):
     colors = colors_for_map(3)
     x=[]
     avg_y=[]
-    for edges in range(20, 200):
+    for edges in frange(20, 500, 10):
         # print(edges)
         x.append(edges)
         y=[]
-        for idx in range(0,10):
-            M,g = create_graph(100,4,edges)
+        for idx in range(0, 10):
+            M,g = create_graph(50,4,edges)
             graph = Graph(g)
             constraints = []
             for edge in graph.edges():
@@ -1025,12 +1026,12 @@ def script_test2(use_ac3):#Median
     colors = colors_for_map(3)
     x=[]
     med_y=[]
-    for edges in range(20,200):
+    for edges in frange(20, 500, 10):
         # print(edges)
         x.append(edges)
         y=[]
         for idx in range(0,10):
-            M,g = create_graph(100,4,edges)
+            M,g = create_graph(50,4,edges)
             graph = Graph(g)
             constraints = []
             for edge in graph.edges():
@@ -1090,10 +1091,10 @@ def script_test4(use_ac3):#med
     med_y=[]
     for vertex in frange(10,100,10):
         x.append(vertex)
-        edges=2*vertex
+        edges=3*vertex
         y=[]
-        for idx in range(0,10):
-            M,g = create_graph(vertex,5,edges)
+        for idx in range(0, 10):
+            M,g = create_graph(vertex, 4, edges)
             graph = Graph(g)
             constraints = []
             for edge in graph.edges():
@@ -1141,9 +1142,9 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    # script_test1(True)
-    # script_test2(True)
-    # script_test3(True)
-    script_test4(True)
+    # script_test1(False)
+    script_test2(False)
+    # script_test3(False)
+    # script_test4(False)
 
 
