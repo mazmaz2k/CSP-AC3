@@ -8,7 +8,10 @@ from random import randint
 import random
 import math
 
-
+"""
+	Base class for unary constraints
+	Implement isSatisfied in subclass to use
+"""
 
 
 def xrange(x):
@@ -26,6 +29,10 @@ class UnaryConstraint:
         return var == self.var
 
 
+"""	
+	Implementation of UnaryConstraint
+	Satisfied if value does not match passed in paramater
+"""
 
 
 class BadValueConstraint(UnaryConstraint):
@@ -40,6 +47,11 @@ class BadValueConstraint(UnaryConstraint):
         return 'BadValueConstraint (%s) {badValue: %s}' % (str(self.var), str(self.badValue))
 
 
+"""	
+	Implementation of UnaryConstraint
+	Satisfied if value matches passed in paramater
+"""
+
 
 class GoodValueConstraint(UnaryConstraint):
     def __init__(self, var, goodValue):
@@ -52,6 +64,11 @@ class GoodValueConstraint(UnaryConstraint):
     def __repr__(self):
         return 'GoodValueConstraint (%s) {goodValue: %s}' % (str(self.var), str(self.goodValue))
 
+
+"""
+	Base class for binary constraints
+	Implement isSatisfied in subclass to use
+"""
 
 
 class BinaryConstraint:
@@ -73,6 +90,10 @@ class BinaryConstraint:
         return self.var1
 
 
+"""
+	Implementation of BinaryConstraint
+	Satisfied if both values assigned are different
+"""
 
 
 class NotEqualConstraint(BinaryConstraint):
@@ -83,6 +104,14 @@ class NotEqualConstraint(BinaryConstraint):
 
     def __repr__(self):
         return 'NotEqualConstraint (%s, %s)' % (str(self.var1), str(self.var2))
+
+
+"""
+	Implementation of BinaryConstraint
+	Used when solving nQueens
+	Satisfied if both values are different and the absolute value of the difference
+	of the values are different
+"""
 
 
 class nQueensConstraint(BinaryConstraint):
@@ -202,6 +231,7 @@ class Assignment:
 
 
 def consistent(assignment, csp, var, value):
+    """Question 1"""
 
     for constraint in csp.binaryConstraints:
         if (constraint.affects(var)):
@@ -231,6 +261,7 @@ def consistent(assignment, csp, var, value):
 
 
 def recursiveBacktracking(assignment, csp, orderValuesMethod, selectVariableMethod):
+    """Question 1"""
     if assignment.isComplete():
         return assignment
 
@@ -298,6 +329,7 @@ def chooseFirstVariable(assignment, csp):
 
 
 def minimumRemainingValuesHeuristic(assignment, csp):
+    """Question 2"""
     nextVar = None
     for key in assignment.assignedValues:
         if not assignment.isAssigned(key):
@@ -321,6 +353,11 @@ def minimumRemainingValuesHeuristic(assignment, csp):
     return nextVar
 
 
+"""
+	Trivial method for ordering values to assign.
+	Uses no heuristics.
+"""
+
 
 def orderValues(assignment, csp, var):
     return list(assignment.varDomains[var])
@@ -341,7 +378,8 @@ def orderValues(assignment, csp, var):
 
 
 def leastConstrainingValuesHeuristic(assignment, csp, var):
-
+    """Hint: Creating a helper function to count the number of constrained values might be useful"""
+    """Question 3"""
     values = list(assignment.varDomains[var])
     tuples = []
     answer = []
@@ -388,6 +426,9 @@ def usefulConstraintCount(assignment, csp, var, value):
     return count
 
 
+"""
+	Trivial method for making no inferences.
+"""
 
 
 def noInferences(assignment, csp, var, value):
@@ -412,6 +453,7 @@ def noInferences(assignment, csp, var, value):
 
 
 def forwardChecking(assignment, csp, var, value):
+    """Question 4"""
     inferences = set([])
     domain = assignment.varDomains
     for constraint in csp.binaryConstraints:
@@ -451,6 +493,7 @@ def forwardChecking(assignment, csp, var, value):
 
 
 def recursiveBacktrackingWithInferences(assignment, csp, orderValuesMethod, selectVariableMethod, inferenceMethod):
+    """Question 4"""
     if assignment.isComplete():
         return assignment
 
@@ -493,6 +536,7 @@ def recursiveBacktrackingWithInferences(assignment, csp, orderValuesMethod, sele
 
 
 def revise(assignment, csp, var1, var2, constraint):
+    """Question 5"""
     inferences = set([])
     for secondVal in assignment.varDomains[var2]:
         constraintSatisfied = False
@@ -529,8 +573,9 @@ def revise(assignment, csp, var1, var2, constraint):
 """
 
 
-
 def maintainArcConsistency(assignment, csp, var, value):
+    """Hint: implement revise first and use it as a helper function"""
+    """Question 5"""
     inferences = set([])
     queue = deque()
     for constraint in csp.binaryConstraints:
@@ -568,6 +613,7 @@ def maintainArcConsistency(assignment, csp, var, value):
 
 
 def AC3(assignment, csp):
+    """Hint: implement revise first and use it as a helper function"""
     inferences = set([])
     queue = deque()
     keys = assignment.varDomains.keys()
@@ -843,10 +889,10 @@ def tellme(s):
     plt.title(s, fontsize=16)
     plt.draw()
 
-def print_graph_gui(M, dic, color_list, num_of_colors):
+def print_graph_gui(M, dic, color_list, num_of_colors, pos):
     if color_list is None:
         print("There is no satisfiable answer" )
-        return
+        return False
     options = {
     'node_color': 'red',
     'node_size': 200,
@@ -857,11 +903,13 @@ def print_graph_gui(M, dic, color_list, num_of_colors):
     w, h = len(color_list.keys()), 3;
     all_color_list = []
     for i in range(0,num_of_colors):
-        if i<num_of_colors:
-            all_color_list.append([])
+        # if i<num_of_colors:
+        all_color_list.append([])
 
-    img_color_list = ['r', 'b', 'g',"y",'gray',"pink","purple","tan","gold", "darkblue"]
+    img_color_list = ['r', 'b', 'g', "y", "grey", "pink", "purple", "tan", "gold", "darkblue"]
     for i, var in enumerate(color_list.items()):
+    #     if all_color_list[i] is None:
+    #         all_color_list[i].append([])
         if var[1] is 'RED':
             all_color_list[0].append(int(var[0]))
             # img_color_list.append('r')
@@ -882,8 +930,8 @@ def print_graph_gui(M, dic, color_list, num_of_colors):
             all_color_list[7].append(int(var[0]))
         elif var[1] is 'gold':
             all_color_list[8].append(int(var[0]))
-        else:
-
+        elif var[1] is 'darkblue':
+            print("all colors: ",all_color_list)
             all_color_list[9].append(int(var[0]))
             # img_color_list.append('g')
     # print(dic.values())
@@ -901,7 +949,7 @@ def print_graph_gui(M, dic, color_list, num_of_colors):
 
     print(G.number_of_nodes())
     print(G.number_of_edges())
-    pos = nx.spring_layout(G)  # positions for all nodes
+    #pos = nx.spring_layout(G)  # positions for all nodes
     print('im color list', img_color_list)
     for i in range(0, num_of_colors):
         nx.draw_networkx_nodes(G, pos,
@@ -936,7 +984,7 @@ def print_graph_gui(M, dic, color_list, num_of_colors):
 
 
 def colors_for_map(num):
-    colors_to_return = ["RED", "GREEN", "BLUE","yellow","gray","pink","purple","tan","gold","darkblue"]
+    colors_to_return = ["RED", "GREEN", "BLUE", "yellow", "grey", "pink", "purple", "tan", "gold", "darkblue"]
     return colors_to_return[:num]
 
 
@@ -1116,6 +1164,59 @@ def script_test4(use_ac3):#med
     # print(med_y)
 
 
+
+def create_empty_graph(M, dic, color_list, num_of_colors):
+    if color_list is None:
+        print('There is no satisfiable answer')
+        return
+
+    G = nx.Graph()
+    print('color list:', color_list)
+    w , h = len(color_list.keys()) , 3
+    all_color_list = []
+    for i in range(0, num_of_colors):
+        if i < num_of_colors:
+            all_color_list.append([])
+
+
+    for i, var1 in enumerate(dic.keys()):
+        print(var1 + ": ",end='')
+        G.add_node(int(var1), color='white')
+        for var2 in dic[var1]:
+            print(var2+" ", end='')
+            if not G.has_edge(int(var1), int(var2)):
+                G.add_edge(int(var1), int(var2))
+                # print(G.nodes(int(var1)))
+
+    pos = nx.spring_layout(G)
+
+
+    nx.draw_networkx(G, pos, with_labels=True, font_weight='bold', node_color='grey')
+    #plt.hold()
+
+    #nx.draw_shell(G, nlist=[range(5, M), range(5)], with_labels=True,font_weight='bold')
+    plt.axis('off')
+
+    plt.savefig('empty_graph.jpg')
+    plt.clf()
+
+    return pos
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def main():
     M, g = create_graph(50, 5, 100)
     graph = Graph(g)
@@ -1142,9 +1243,9 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    # script_test1(False)
-    script_test2(False)
+    # script_test1(True)
+    # script_test2(True)
     # script_test3(False)
-    # script_test4(False)
+    script_test4(True)
 
 
